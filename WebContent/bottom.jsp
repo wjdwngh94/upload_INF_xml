@@ -4,8 +4,8 @@
 
 </td>
 			</tr>
-			<tr height = "70">
-				<th colspan="2" align ="right">황인빈 컴퍼니</th>
+			<tr height = "50">
+				<th colspan="2" align ="right">co</th>
 			</tr>
 		</table>
 	</div>

@@ -7,9 +7,10 @@
 	request.setCharacterEncoding("euc-kr");
 	String name = request.getParameter("name");
 
+	//유효성 검사
 	if (name == null || name.trim().equals("")) {
 		response.sendRedirect("home.jsp");//쫓아내겠다.
-		return;
+		return;//_jspService();를 종료한다.
 	}
 
 	Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -39,7 +40,7 @@
 	<tr>
 		<th>번호</th>
 		<th>이름</th>
-		<th>내용</th>
+		<th width="40%">내용</th>
 		<th>작성일</th>
 	</tr>
 	<!-- 내용줄 : 데이터가 있을 때마다 1줄씩 생성 -->
