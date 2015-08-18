@@ -49,7 +49,7 @@
 				<td><input type="text" name="name"></td>
 			</tr>
 			<tr>
-				<th colspan="1"><input type="submit" value="입력"> <input
+				<th colspan="2"><input type="submit" value="입력"> <input
 					type="reset" value="취소"></th>
 			</tr>
 		</table>
@@ -67,7 +67,7 @@
 				<td><input type="text" name="name"></td>
 			</tr>
 			<tr>
-				<th colspan="1"><input type="submit" value="입력"> <input
+				<th colspan="2"><input type="submit" value="입력"> <input
 					type="reset" value="취소"></th>
 			</tr>
 		</table>

@@ -4,12 +4,22 @@
 	pageEncoding="EUC-KR"%>
 <!-- list.jsp : 목록 페이지 -->
 <%
-	//DAO 생성 후 DB 명단을 전부다 가져오라고 지시한다.
+	//검색어 수신하기
+	request.setCharacterEncoding("euc-kr");
+	String name = request.getParameter("name");
+	if (name == null || name.trim().equals("")) {
+		response.sendRedirect("home.jsp");//쫓아내겠다.
+		return;
+	}
+
+	//DB 접속 및 데이터 가져오기 = MiniDAO시켜서 처리
 	MiniDAO dao = new MiniDAO();
 
-	//resultSet로 저장하면 데이터가 몇개인지 알수가 없다.
-	ArrayList<MiniDTO> list = dao.list();
-	//게시글이 들어있는 ArrayList
+	//name을 건내주고 find로 받겠다
+	//즉 검색어를 건내주고 검색명단(ArrayList<게시글-MiniDTO>)을 받아야한다.
+
+	ArrayList<MiniDTO> find = dao.find(name);
+	//java.util.ArrayList<MiniDTO> find = dao.find(name);와 동일(import)
 
 	//list에 들어가 있는 데이터 화면에 출력
 %>
@@ -21,7 +31,7 @@
 
 	<!-- 목록 -->
 	<%
-		if (list == null || list.size() == 0) {
+		if (find == null || find.size() == 0) {
 			//list가 없는경우와 비어있는 경우
 	%>
 	<h1>게시글이 없습니다.</h1>
@@ -37,7 +47,7 @@
 		</tr>
 		<!-- 내용 : ArrayList<MiniDTO> list안의 내용 추출 -->
 		<%
-			for (MiniDTO dto : list) //확장 for문
+			for (MiniDTO dto : find) //확장 for문
 				/*for(int i=0; i<list.size(); ++i){
 					MiniDTO dto = list.get(i);
 					//이후 출력
@@ -58,6 +68,6 @@
 	%>
 </div>
 <h5 align="right">
-	총<%=list.size()%>개의 데이터가 있습니다.
+	총<%=find.size()%>개의 데이터가 있습니다.
 	</h3>
 	<%@ include file="/bottom.jsp"%>
