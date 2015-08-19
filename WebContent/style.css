@@ -37,7 +37,8 @@ a:hover {
 }
 
 /*입력 양식 스타일 .은 class로 #은 id로*/
-.box {
+ /*class 를 아래의 것들로 설정할 때 해당속성에 따라 변한다.*/
+ .box {
 	border: 1px solid navy;
 	padding-left: 8px;
 }
@@ -48,7 +49,7 @@ a:hover {
 }
 
 .m1 {
-	background-color: #EAF0E8;
+	background-color: #80ffff;
 	border-bottom: 1px dotted #9933CC;
 }
 
