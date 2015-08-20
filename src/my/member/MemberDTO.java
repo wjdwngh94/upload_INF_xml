@@ -14,10 +14,14 @@ public class MemberDTO {
 	private String addr2;
 	private String power;
 
+	public MemberDTO() {
+		super();
+	}
+
 	public MemberDTO(int no, String id, String pw, String name, String birth,
 			String joindate, String gender, String post, String addr1,
 			String addr2, String power) {
-		super();
+
 		this.no = no;
 		this.id = id;
 		this.pw = pw;
