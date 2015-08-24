@@ -1,14 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
-
-<!-- top.jsp를 불러온다. -->
-
-<%@ include file="top.jsp"%>
+    pageEncoding="EUC-KR"%>
+<%@ include file="top.jsp" %>
 <div align="center">
-	<pre>
-				만나서 
-					반갑습니다.
-				</pre>
+	<img src="welcome.gif" width="300" height="220">
 </div>
-<!-- bottom.jsp를 불러온다. -->
-<%@ include file="bottom.jsp"%>
+<pre><!-- 작성한 내용이 그대로 나오는 공간 -->
+	<font size="5">
+	만
+	나
+	서 
+	반	가	워	요~	
+	</font>				
+</pre>					
+<%@ include file="bottom.jsp" %>
