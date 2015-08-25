@@ -1,43 +1,40 @@
-<%@page import="com.sun.corba.se.pept.transport.Connection"%>
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
-<%@page import="java.sql.*"%>
-<%@page import="my.member.*"%>
-
-<jsp:useBean id="mbdao" class="my.member.MemberDAO" />
-<!-- delete.jsp : ì´ë¦„ì„ ë°›ì•„ ì¼ì¹˜ ì‚­ì œ  -->
+    pageEncoding="EUC-KR"%>
+<!-- memberDelete.jsp : no Àü¼Û¹Þ¾Æ¼­ ÇØ´çÇÏ´Â È¸¿øÀ» »èÁ¦ -->
+<jsp:useBean id="mbdao" class="my.member.MemberDAO"/>
 <%
-	//DAOì‹œì¼œì„œ ë°ì´í„° ì‚­ì œ ìš”ì²­í•œë‹¤.
 	String tmp = request.getParameter("no");
 	int no = 0;
-	try {
-		no = Integer.parseInt(tmp); //NumberFormatException
-		//ìˆ«ìžê°€ ì•„ë‹Œê²ƒë“¤ì„ ê±¸ëŸ¬ë‚¸ë‹¤.
-		if (no <= 0)
-			throw new Exception(); // ê°•ì œ ì˜ˆì™¸ ì²˜ë¦¬
-		//ì–‘ìˆ˜ê°€ ì•„ë‹Œ ì •ìˆ˜ë“¤ì„ ê±¸ëŸ¬ë‚¸ë‹¤
-	} catch (Exception e) {
-		//ì˜¤ë¥˜ ë°œìƒì‹œ ì«’ì•„ ë‚¸ë‹¤ - ìœ íš¨ì„± ê²€ì‚¬
+	try{
+		no = Integer.parseInt(tmp);//NumberFormatException
+		if(no<=0) throw new Exception();//°­Á¦ ¿¹¿Ü Ã³¸®
+	}catch(Exception e){
+		//¿À·ù ¹ß»ý½Ã(tmp°¡ ¼ýÀÚ·Î ¹Ù²ð ¼ö ¾ø´Â °æ¿ì)
 		response.sendRedirect("memberList.jsp");
-
 		return;
 	}
 	boolean result = mbdao.deleteMember(no);
-	String msg = "", url = "";
-	if (result) {
-
-		msg = "ì‚­ì œ ì„±ê³µ";
-		url = "memberList.jsp";
-
-	} else {
-
-		msg = "ì‚­ì œ ì‹¤íŒ¨";
-		url = "memberList.jsp";
-
+	String msg="";
+	if(result){
+		msg="Å»ÅðÃ³¸®°¡ ¼º°øÀûÀ¸·Î ¿Ï·áµÇ¾ú½À´Ï´Ù.";
+	}else{
+		msg="Å»ÅðÃ³¸® Áß ¿À·ù°¡ ¹ß»ýÇÏ¿´½À´Ï´Ù.";
 	}
 %>
 <script type="text/javascript">
 	alert("<%=msg%>");
-	location.href ="<%=url%>
-	";
+	location.href="memberList.jsp";
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+

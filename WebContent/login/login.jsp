@@ -2,6 +2,21 @@
 	pageEncoding="EUC-KR"%>
 <!-- login.jsp -->
 <%@include file="../top.jsp"%>
+<%
+	//쿠키 확인
+	Cookie[] ckList = request.getCookies(); //모든 쿠키를 가져온다.
+	String ck_name = null, ck_value = null;
+	if (ckList != null) { //쿠키가 있으면
+		for (int i = 0; i < ckList.length; ++i) { //반복을 돌면서 원하는 쿠키를 찾는다.
+			if (ckList[i].getName().equals("saveId")) {
+				ck_value = ckList[i].getValue(); //값과 이름을 만들어둔 변수에 넣는다.
+				ck_name = ckList[i].getName();
+				break;
+			}
+		}
+	}
+	//ck_name, ck_value
+%>
 <script type="text/javascript">
 	function loginCheck() {
 		if (!f.id.value) {
@@ -18,6 +33,10 @@
 	}
 </script>
 <div align="center">
+	<h1>
+		ck_name :
+		<%=ck_name%>, ck_value :
+		<%=ck_value%></h1>
 	<br> <img src="../img/bottom.gif" width="570" height="40"
 		border="0" alt=""> <br>
 	<p />
@@ -31,10 +50,9 @@
 				<td width="40%"><input type="text" name="id"></td>
 				<td rowspan="2" width="30%" valign="middle"><a
 					href="javascript:loginCheck()"> <img src="../img/bt_login.gif"
-						border="0" alt="로그인">&nbsp;&nbsp;<br> <!-- &nbsp 띄어쓰기를 한번 씩 하겠다 - 강제 띄어 쓰기 -->
+						border="0" alt="로그인">&nbsp;&nbsp;<br>
 				</a> <nobr>
-						<!-- br태그가 적용되지 않는 구간 // br을 쳐도 적용이 안된다.
-						// 줄 뒤틀림을 방지할 수 있다. -->
+						<!-- br태그가 적용되지 않는 구간 -->
 						<input type="checkbox" name="saveId"> <font face="굴림"
 							size="2">아이디 기억하기</font>
 					</nobr></td>

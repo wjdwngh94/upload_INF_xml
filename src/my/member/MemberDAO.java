@@ -7,14 +7,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import my.db.ConnectionPoolBean;
+
 public class MemberDAO {
+	// PC방 정보만 알고 있으면 된다.
+	private ConnectionPoolBean pool;
+
+	// 설정용 setter 메소드
+	public void setPool(ConnectionPoolBean pool) {
+		this.pool = pool;
+	}
+
 	// 멤버 변수 : DB연결과 관련된 객체 또는 정보들을 보관
-	private String driverClassName = "oracle.jdbc.driver.OracleDriver";
-	private String url = "jdbc:oracle:thin:@localhost:1521:xe";
-	private String user = "jsp1";
-	private String pass = "jsp1";
+	// private String driverClassName = "oracle.jdbc.driver.OracleDriver";
+	// private String url = "jdbc:oracle:thin:@localhost:1521:xe";
+	// private String user = "jsp1";
+	// private String pass = "jsp1";
 
 	private Connection con;
+
+
 	private PreparedStatement ps;
 	private ResultSet rs;
 
@@ -27,8 +39,9 @@ public class MemberDAO {
 	// 연결 메소드 : 드라이버 검색->로그인 까지 수행
 	public void connect() {
 		try {
-			Class.forName(driverClassName);// ClassNotFoundEx
-			con = DriverManager.getConnection(url, user, pass);
+			// Class.forName(driverClassName);// ClassNotFoundEx
+			con = pool.getConnection();
+			// con = DriverManager.getConnection(url, user, pass);
 			// SQLEx
 		} catch (Exception e) {
 			System.out.println("DB 연결 과정에서 오류 발생");
@@ -42,8 +55,7 @@ public class MemberDAO {
 				rs.close();
 			if (ps != null)
 				ps.close();
-			if (con != null)
-				con.close();
+			if(con != null) pool.returnConnection(con);//연결 반납
 		} catch (SQLException e) {
 			System.out.println("DB 연결 종료 과정에서 오류 발생");
 		}
@@ -276,6 +288,36 @@ public class MemberDAO {
 			else
 				return false;
 		} finally {
+			close();
+		}
+	}
+
+	// 상태값 상수 - return 1,2,3대신에 가독성을 위하여 사용한다.
+	public static final int OK = 1;
+	public static final int NOK = 2;
+	public static final int ERROR = 3;
+
+	// int result = mbdao.login(id, pw);
+	public int login(String id, String pw) {// throws SQLException { throws를 뺐다.
+		// throws
+		// 왜 finally에서 return 3을 적으면 안되는 거지??
+		String sql = "";
+		try {
+			connect();
+			ps = con.prepareStatement(sql);
+			ps.setString(1, id);
+			ps.setString(2, pw);
+			rs = ps.executeQuery();
+			if (rs.next()) { // 아이디가 있으면
+				return OK; // 로그인 성공
+			} else {
+				return NOK; // 정보오류
+			}
+
+		} catch (SQLException e) {
+			return ERROR; // 서버오류
+		} finally {
+
 			close();
 		}
 	}

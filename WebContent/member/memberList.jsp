@@ -1,17 +1,32 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
 	pageEncoding="EUC-KR"%>
-	
 <%@ page import="java.util.*"%>
 <%@ page import="my.member.*"%>
+
+
+<!-- DB의 연결방식 바꾸기 -->
+
+<!-- Connection Pool Bean 을 Application영역에 생성한다. -->
+<jsp:useBean id="pool" class="my.db.ConnectionPoolBean"
+	scope="application"></jsp:useBean>
+
+<!-- mbdao라는 고객을 생성하고 pool의 정보를 mbdao에게 주입 -->
+<!-- 손님은 컴퓨터를 이용하는 고객임으로 -->
+<jsp:useBean id="mbdao" class="my.member.MemberDAO" />
+
+<jsp:setProperty property="pool" name="mbdao" value="<%=pool%>" />
+
+
 <!-- memberList.jsp : 회원 목록 + 검색 페이지 -->
 <!-- 검색창을 만들고 검색어의 유무에 따라 모드를 설정 -->
 <%@ include file="/top.jsp"%>
 <!-- javascript 함수 -->
 <script type="text/javascript">
 	function openEdit(no){
-		alert(no+"번 회원 수정!");
-		//사용자의 정보를 새창을 띄워 화면에 표시
-		window.open("memberEdit.jsp?no="+no,"","width=500, height=500");
+		//alert(no+"번 회원 수정!");
+		//새창을 띄워 사용자의 정보를 변경하도록 화면에 표시
+		window.open("memberEdit.jsp?no="+no,"", 
+							"width=500, height=500");
 	}
 	function openDel(no){
 		//alert(no+"번 회원 삭제!");
@@ -19,7 +34,6 @@
 		var check = window.confirm("정말 삭제하시겠습니까?");
 		if(check){//예를 눌렀으면
 			location.href="memberDelete.jsp?no="+no;
-		//물음표를 찍어서 값을 뒤에 첨부하겠다.
 		}
 	}
 </script>
@@ -35,7 +49,6 @@
 		search :
 		<%=search%>, searchString :
 		<%=searchString%></h2>
-	<jsp:useBean id="mbdao" class="my.member.MemberDAO" />
 	<%
 		String mode = "";
 

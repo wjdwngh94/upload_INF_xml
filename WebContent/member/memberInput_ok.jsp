@@ -4,6 +4,7 @@
 <%@ page import="my.member.*" %>
 <!-- 데이터가 10만개면 10만줄 써서 받을거냐? 그럴리가... -->
 <!-- jsp 액션태그를 활용하여 데이터를 자동으로 수신 -->
+<%	request.setCharacterEncoding("euc-kr"); %>
 
 <!-- MemberDTO 생성 -->
 <jsp:useBean id="mbdto" class="my.member.MemberDTO"/>

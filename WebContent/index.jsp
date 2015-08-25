@@ -11,6 +11,3 @@
 
 <!-- bottom.jsp를 불러온다 -->
 <%@ include file="bottom.jsp" %>
-
-
-

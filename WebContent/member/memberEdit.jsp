@@ -1,190 +1,217 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
-	
-<!-- memberEdit.jsp : noë¥¼ ê°€ì§€ê³  íšŒì› ì •ë³´ë¥¼ ë¶ˆëŸ¬ì˜¨ë‹¤ -->
-<jsp:useBean id="mbdao" class="my.member.MemberDAO" />
-<!-- noë¡œ ì „ì²´ ì •ë³´ë¥¼ ë‹¤ ê°€ì ¸ì˜¬ ìˆ˜ ìˆì–´ì•¼ í•œë‹¤. -->
+    pageEncoding="EUC-KR"%>
+<!-- memberEdit.jsp : no¸¦ °¡Áö°í È¸¿ø Á¤º¸¸¦ ºÒ·¯¿Â´Ù. -->
+<jsp:useBean id="mbdao" class="my.member.MemberDAO"/>
 <%
-	//deleteì˜ ë³€í™˜ê³¼ì •ì„ ì‚¬ìš©í•œë‹¤. (ë°›ì•„ì˜¬ë• ì–¸ì œë‚˜ Stringì„ìœ¼ë¡œ)
 	String tmp = request.getParameter("no");
 	int no = 0;
-	try {
-		no = Integer.parseInt(tmp); //NumberFormatException
-		//ìˆ«ìê°€ ì•„ë‹Œê²ƒë“¤ì„ ê±¸ëŸ¬ë‚¸ë‹¤.
-		if (no <= 0)
-			throw new Exception(); // ê°•ì œ ì˜ˆì™¸ ì²˜ë¦¬
-		//ì–‘ìˆ˜ê°€ ì•„ë‹Œ ì •ìˆ˜ë“¤ì„ ê±¸ëŸ¬ë‚¸ë‹¤
-	} catch (Exception e) {
-		//ì˜¤ë¥˜ ë°œìƒì‹œ ì«’ì•„ ë‚¸ë‹¤ - ìœ íš¨ì„± ê²€ì‚¬
-		//ì°½ ë‹«ëŠ” ì½”ë“œë“±ì„ ì¶”ê°€í•  ìˆ˜ ìˆë‹¤.
-
+	try{
+		no = Integer.parseInt(tmp);//NumberFormatException
+		if(no<=0) throw new Exception();//°­Á¦ ¿¹¿Ü Ã³¸®
+	}catch(Exception e){
+		//¿À·ù ¹ß»ı½Ã(tmp°¡ ¼ıÀÚ·Î ¹Ù²ğ ¼ö ¾ø´Â °æ¿ì)
+		//Ã¢ ´İ´Â ÄÚµå µîÀ» Ãß°¡ÇÒ ¼ö ÀÖ´Ù.
 		return;
 	}
-
-	//ë²ˆí˜¸ë¡œ íšŒì› 1ëª…ì˜ ëª¨ë“  ì •ë³´ë¥¼ ë¶ˆëŸ¬ì˜¤ê¸°
-	my.member.MemberDTO info = mbdao.getMember(no);
-	if (info == null) {
-		//ì°½ ë‹«ê¸° ë“±ì˜ ì²˜ë¦¬ í›„
+	
+	//¹øÈ£·Î È¸¿ø 1¸íÀÇ ¸ğµç Á¤º¸ ºÒ·¯¿À±â
+	my.member.MemberDTO info = mbdao.getMember(no); 
+	if(info==null){
+		//Ã¢ ´İ±â µîÀÇ Ã³¸® ÈÄ
 		return;
 	}
 %>
-<!-- memberInput.jspì˜ ë‚´ìš©ì„ ë„£ëŠ”ë‹¤. -->
+<!-- memberInput.jspÀÇ ³»¿ëÀ» ºÙ¿©³Ö°í ¼öÁ¤ -->
 <html>
 <head>
-<title>íšŒì› ê°€ì…</title>
-<link rel="stylesheet" type="text/css" href="../style.css">
-<script type="text/javascript">
-	function checkForm() {
-		//í¼ ê²€ì‚¬(name)
-		if (!f.pw.value) {
-			alert("ë¹„ë°€ë²ˆí˜¸ë¥¼ ì…ë ¥í•˜ì„¸ìš”");
-			f.pw.focus();
-			return;
-		} else if (f.pw.value.length < 3) {
-			alert("ë¹„ë°€ë²ˆí˜¸ê°€ ì¢€ ì§§ë„¤ìš”?");
-			f.pw.select();//í•´ë‹¹í…ìŠ¤íŠ¸ ì„ íƒ
-			return;
+	<title>È¸¿ø Á¤º¸ ¼öÁ¤</title>  
+	<link rel="stylesheet" type="text/css" href="../style.css">
+	<script type="text/javascript">
+		function checkForm(){
+			//Æû °Ë»ç(name)
+			if(!f.pw.value){
+				alert("ºñ¹Ğ¹øÈ£¸¦ ÀÔ·ÂÇÏ¼¼¿ä");
+				f.pw.focus();
+				return;
+			}else if(f.pw.value.length < 3){
+				alert("ºñ¹Ğ¹øÈ£°¡ Á» Âª³×¿ä?");
+				f.pw.select();//ÇØ´çÅØ½ºÆ® ¼±ÅÃ
+				return;
+			}
+			
+			//Æû Àü¼Û(document ¹®¼­ °´Ã¼ È°¿ë)
+			//f¶ó´Â formÀ» submit ¹öÆ°À» ´©¸¥ °Í°ú °°ÀÌ Ã³¸®ÇÏ¶ó
+			document.f.submit();
 		}
-
-		//í¼ ì „ì†¡(document ë¬¸ì„œ ê°ì²´ í™œìš©)
-		//fë¼ëŠ” formì„ submit ë²„íŠ¼ì„ ëˆ„ë¥¸ ê²ƒê³¼ ê°™ì´ ì²˜ë¦¬í•˜ë¼
-		document.f.submit();
-	}
-	function cancel() {
-		var check = window.confirm("ì •ë§ ì°½ì„ ë‹«ìœ¼ì‹œê² ìŠµë‹ˆê¹Œ?");
-		//alert(check);
-		if (check) {//true
-			window.close();
+		function cancel(){
+			var check = window.confirm("Á¤¸» Ã¢À» ´İÀ¸½Ã°Ú½À´Ï±î?");
+			//alert(check);
+			if(check){//true
+				window.close();
+			}
 		}
-	}
-	function onlyNum() {
-		//event : javascriptì˜ ì´ë²¤íŠ¸ ì •ë³´ë¥¼ ê°€ì§€ê³  ìˆëŠ” ê°ì²´
-		//alert(event.keyCode);
-		var key = event.keyCode;
-		if (key >= 48 && key <= 57) {
-			event.returnValue = true;//í†µê³¼
-		} else {
-			//event.returnValue = false;//ê±°ì ˆ
-			event.preventDefault();
+		function onlyNum(){
+			//event : javascriptÀÇ ÀÌº¥Æ® Á¤º¸¸¦ °¡Áö°í ÀÖ´Â °´Ã¼
+			//alert(event.keyCode);
+			var key = event.keyCode;
+			if(key>=48 && key <= 57){
+				event.returnValue = true;//Åë°ú
+			}else{
+				//event.returnValue = false;//°ÅÀı
+				event.preventDefault();
+			}
 		}
-	}
-</script>
-<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
-<script>
-	function sample6_execDaumPostcode() {
-		new daum.Postcode(
-				{
-					oncomplete : function(data) {
-						// íŒì—…ì—ì„œ ê²€ìƒ‰ê²°ê³¼ í•­ëª©ì„ í´ë¦­í–ˆì„ë•Œ ì‹¤í–‰í•  ì½”ë“œë¥¼ ì‘ì„±í•˜ëŠ” ë¶€ë¶„.
-
-						// ê° ì£¼ì†Œì˜ ë…¸ì¶œ ê·œì¹™ì— ë”°ë¼ ì£¼ì†Œë¥¼ ì¡°í•©í•œë‹¤.
-						// ë‚´ë ¤ì˜¤ëŠ” ë³€ìˆ˜ê°€ ê°’ì´ ì—†ëŠ” ê²½ìš°ì—” ê³µë°±('')ê°’ì„ ê°€ì§€ë¯€ë¡œ, ì´ë¥¼ ì°¸ê³ í•˜ì—¬ ë¶„ê¸° í•œë‹¤.
-						var fullAddr = ''; // ìµœì¢… ì£¼ì†Œ ë³€ìˆ˜
-						var extraAddr = ''; // ì¡°í•©í˜• ì£¼ì†Œ ë³€ìˆ˜
-
-						// ì‚¬ìš©ìê°€ ì„ íƒí•œ ì£¼ì†Œ íƒ€ì…ì— ë”°ë¼ í•´ë‹¹ ì£¼ì†Œ ê°’ì„ ê°€ì ¸ì˜¨ë‹¤.
-						if (data.userSelectedType === 'R') { // ì‚¬ìš©ìê°€ ë„ë¡œëª… ì£¼ì†Œë¥¼ ì„ íƒí–ˆì„ ê²½ìš°
-							fullAddr = data.roadAddress;
-
-						} else { // ì‚¬ìš©ìê°€ ì§€ë²ˆ ì£¼ì†Œë¥¼ ì„ íƒí–ˆì„ ê²½ìš°(J)
-							fullAddr = data.jibunAddress;
-						}
-
-						// ì‚¬ìš©ìê°€ ì„ íƒí•œ ì£¼ì†Œê°€ ë„ë¡œëª… íƒ€ì…ì¼ë•Œ ì¡°í•©í•œë‹¤.
-						if (data.userSelectedType === 'R') {
-							//ë²•ì •ë™ëª…ì´ ìˆì„ ê²½ìš° ì¶”ê°€í•œë‹¤.
-							if (data.bname !== '') {
-								extraAddr += data.bname;
-							}
-							// ê±´ë¬¼ëª…ì´ ìˆì„ ê²½ìš° ì¶”ê°€í•œë‹¤.
-							if (data.buildingName !== '') {
-								extraAddr += (extraAddr !== '' ? ', '
-										+ data.buildingName : data.buildingName);
-							}
-							// ì¡°í•©í˜•ì£¼ì†Œì˜ ìœ ë¬´ì— ë”°ë¼ ì–‘ìª½ì— ê´„í˜¸ë¥¼ ì¶”ê°€í•˜ì—¬ ìµœì¢… ì£¼ì†Œë¥¼ ë§Œë“ ë‹¤.
-							fullAddr += (extraAddr !== '' ? ' (' + extraAddr
-									+ ')' : '');
-						}
-
-						// ìš°í¸ë²ˆí˜¸ì™€ ì£¼ì†Œ ì •ë³´ë¥¼ í•´ë‹¹ í•„ë“œì— ë„£ëŠ”ë‹¤.
-						document.getElementById('sample6_postcode').value = data.zonecode; //5ìë¦¬ ìƒˆìš°í¸ë²ˆí˜¸ ì‚¬ìš©
-						document.getElementById('sample6_address').value = fullAddr;
-
-						// ì»¤ì„œë¥¼ ìƒì„¸ì£¼ì†Œ í•„ë“œë¡œ ì´ë™í•œë‹¤.
-						document.getElementById('sample6_address2').focus();
-					}
-				}).open();
-	}
-</script>
+	</script>
+	<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+	<script>
+	    function sample6_execDaumPostcode() {
+	        new daum.Postcode({
+	            oncomplete: function(data) {
+	                // ÆË¾÷¿¡¼­ °Ë»ö°á°ú Ç×¸ñÀ» Å¬¸¯ÇßÀ»¶§ ½ÇÇàÇÒ ÄÚµå¸¦ ÀÛ¼ºÇÏ´Â ºÎºĞ.
+	
+	                // °¢ ÁÖ¼ÒÀÇ ³ëÃâ ±ÔÄ¢¿¡ µû¶ó ÁÖ¼Ò¸¦ Á¶ÇÕÇÑ´Ù.
+	                // ³»·Á¿À´Â º¯¼ö°¡ °ªÀÌ ¾ø´Â °æ¿ì¿£ °ø¹é('')°ªÀ» °¡Áö¹Ç·Î, ÀÌ¸¦ Âü°íÇÏ¿© ºĞ±â ÇÑ´Ù.
+	                var fullAddr = ''; // ÃÖÁ¾ ÁÖ¼Ò º¯¼ö
+	                var extraAddr = ''; // Á¶ÇÕÇü ÁÖ¼Ò º¯¼ö
+	
+	                // »ç¿ëÀÚ°¡ ¼±ÅÃÇÑ ÁÖ¼Ò Å¸ÀÔ¿¡ µû¶ó ÇØ´ç ÁÖ¼Ò °ªÀ» °¡Á®¿Â´Ù.
+	                if (data.userSelectedType === 'R') { // »ç¿ëÀÚ°¡ µµ·Î¸í ÁÖ¼Ò¸¦ ¼±ÅÃÇßÀ» °æ¿ì
+	                    fullAddr = data.roadAddress;
+	
+	                } else { // »ç¿ëÀÚ°¡ Áö¹ø ÁÖ¼Ò¸¦ ¼±ÅÃÇßÀ» °æ¿ì(J)
+	                    fullAddr = data.jibunAddress;
+	                }
+	
+	                // »ç¿ëÀÚ°¡ ¼±ÅÃÇÑ ÁÖ¼Ò°¡ µµ·Î¸í Å¸ÀÔÀÏ¶§ Á¶ÇÕÇÑ´Ù.
+	                if(data.userSelectedType === 'R'){
+	                    //¹ıÁ¤µ¿¸íÀÌ ÀÖÀ» °æ¿ì Ãß°¡ÇÑ´Ù.
+	                    if(data.bname !== ''){
+	                        extraAddr += data.bname;
+	                    }
+	                    // °Ç¹°¸íÀÌ ÀÖÀ» °æ¿ì Ãß°¡ÇÑ´Ù.
+	                    if(data.buildingName !== ''){
+	                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+	                    }
+	                    // Á¶ÇÕÇüÁÖ¼ÒÀÇ À¯¹«¿¡ µû¶ó ¾çÂÊ¿¡ °ıÈ£¸¦ Ãß°¡ÇÏ¿© ÃÖÁ¾ ÁÖ¼Ò¸¦ ¸¸µç´Ù.
+	                    fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
+	                }
+	
+	                // ¿ìÆí¹øÈ£¿Í ÁÖ¼Ò Á¤º¸¸¦ ÇØ´ç ÇÊµå¿¡ ³Ö´Â´Ù.
+	                document.getElementById('sample6_postcode').value = data.zonecode; //5ÀÚ¸® »õ¿ìÆí¹øÈ£ »ç¿ë
+	                document.getElementById('sample6_address').value = fullAddr;
+	
+	                // Ä¿¼­¸¦ »ó¼¼ÁÖ¼Ò ÇÊµå·Î ÀÌµ¿ÇÑ´Ù.
+	                document.getElementById('sample6_address2').focus();
+	            }
+	        }).open();
+	    }
+	</script>
 </head>
 <body>
-	<div align="center">
-		<form name="f" action="memberEdit_ok.jsp" method="post">
-			<!-- hiddenìœ¼ë¡œ í•„ìš”í•œ ë°ì´í„°ë¥¼ ì²¨ë¶€í•œë‹¤. -->
-			<!-- ì‚¬ìš©ìì˜ ì˜ì§€ì™€ ìƒê´€ì—†ì´ noì˜ ê°’ì„ ì²¨ë¶€í•´ ë‚ ë¦°ë‹¤. -->
-			<input type="hidden" name="no" value="<%=no%>">
-			<hr color="red" width="300">
-			<h2>íšŒì› ê°€ì… ì •ë³´ ìˆ˜ì •</h2>
-			<hr color="red" width="300">
-			<table width="500" class="outline">
-				<tr>
-					<th class="m2">ì´ë¦„</th>
-					<td class="m3"><input type="text" name="name" class="box"
-						maxlength="5" size="10" readonly value="<%=info.getName()%>"></td>
-					<!-- value : ì´ˆê¸°ê°’  readonly : ì ê·¸ê¸°-->
-				</tr>
-				<tr>
-					<th class="m2">ì•„ì´ë””</th>
-					<td class="m3"><input type="text" name="id" class="box"
-						maxlength="20" size="20" style="ime-mode: disabled;"
-						placeholder="ìµœëŒ€ 20ì" value="<%=info.getId()%>"></td>
-				</tr>
-				<tr>
-					<th class="m2">ë¹„ë°€ë²ˆí˜¸</th>
-					<td class="m3"><input type="password" name="pw" class="box"
-						maxlength="20" size="20" placeholder="ìµœëŒ€ 20ì"></td>
-				</tr>
-				<tr>
-					<th class="m2">ìƒë…„ì›”ì¼</th>
-					<td class="m3"><input type="text" name="birth" class="box"
-						maxlength="8" size="8" onkeypress="onlyNum();"
-						style="ime-mode: disabled;" readonly value="<%=info.getBirth()%>">
-						<!-- IEìš© í•œê¸€ê¸ˆì§€ ì†ì„± --> í˜•ì‹ : 20010101</td>
-				</tr>
-				<tr>
-					<th class="m2">ì„±ë³„</th>
-					<td class="m3"><%=info.getGender()%></td>
-				</tr>
-				<tr>
-					<th class="m2" rowspan="3">ì£¼ì†Œ</th>
-					<td class="m3"><input type="text" id="sample6_postcode"
-						name="post" placeholder="ìš°í¸ë²ˆí˜¸" maxlength="6" size="6" class="box"
-						readonly onclick="sample6_execDaumPostcode()"
-						value=<%=info.getPost()%>> <!-- disabledë„ ì ê¸ˆ ê¸°ëŠ¥ ìˆ˜í–‰ : ì „ì†¡ ì•ˆë¨ -->
-						<input type="button" value="ìš°í¸ë²ˆí˜¸ ì°¾ê¸°"
-						onclick="sample6_execDaumPostcode()"></td>
-					<!-- nullì´ ëœ° ìˆ˜ ìˆìœ¼ë¯€ë¡œ getter methodë¥¼ ê³ ì¹œë‹¤. -->
-				</tr>
-				<tr>
-					<td class="m3"><input type="text" id="sample6_address"
-						placeholder="ì£¼ì†Œ" name="addr1" class="box" maxlength="50" size="40"
-						readonly value=<%=info.getAddr1()%>></td>
-				</tr>
-				<tr>
-					<td class="m3"><input type="text" id="sample6_address2"
-						placeholder="ìƒì„¸ì£¼ì†Œ" name="addr2" class="box" maxlength="50"
-						size="40" value=<%=info.getAddr2()%>></td>
-				</tr>
-				<tr>
-					<th class="m2" colspan="2"><input type="button" value="ìˆ˜ì •"
-						onclick="checkForm();"> <input type="button" value="ì·¨ì†Œ"
-						onclick="cancel();"></th>
-				</tr>
-			</table>
-		</form>
-	</div>
+<div align="center">
+	<form name="f" action="memberEdit_ok.jsp" method="post">
+	<!-- ÇÊ¿äÇÑ µ¥ÀÌÅÍ´Â hiddenÀ¸·Î Ã·ºÎÇÑ´Ù. -->
+	<input type="hidden" name="no" value="<%=no%>">
+	<hr color="red" width="300"> 
+	<h2>È¸¿ø Á¤º¸ ¼öÁ¤</h2> 
+	<hr color="red" width="300">
+	<table width="500" class="outline">
+	<tr>
+		<th class="m2">ÀÌ¸§</th>
+		<td class="m3">
+			<input type="text" name="name" class="box"
+			maxlength="5" size="10" readonly
+			value="<%=info.getName()%>"> 
+		</td>
+	</tr>
+	<tr>
+		<th class="m2">¾ÆÀÌµğ</th>
+		<td class="m3">
+			<input type="text" name="id" class="box"
+			maxlength="20" size="20" readonly
+			style="ime-mode : disabled;"
+			placeholder="ÃÖ´ë 20ÀÚ"
+			value="<%=info.getId()%>">
+		</td>
+	</tr>
+	<tr>
+		<th class="m2">ºñ¹Ğ¹øÈ£</th>
+		<td class="m3">
+			<input type="password" name="pw" class="box"
+			maxlength="20" size="20" placeholder="ÃÖ´ë 20ÀÚ">
+		</td>
+	</tr>
+	<tr>
+		<th class="m2">»ı³â¿ùÀÏ</th>
+		<td class="m3">
+			<input type="text" name="birth" class="box"
+			maxlength="8" size="8" onkeypress="onlyNum();"
+			style="ime-mode : disabled;" readonly
+			value="<%=info.getBirth()%>"><!-- IE¿ë ÇÑ±Û±İÁö ¼Ó¼º -->
+			Çü½Ä : 20010101	
+		</td>
+	</tr>
+	<tr>
+		<th class="m2">¼ºº°</th>
+		<td class="m3">
+			<%=info.getGender()%>
+		</td>
+	</tr>
+	<tr>
+		<th class="m2" rowspan="3">ÁÖ¼Ò</th>
+		<td class="m3">
+			<input type="text" id="sample6_postcode"
+			name = "post" placeholder="¿ìÆí¹øÈ£"
+			maxlength="6" size="6" class="box" readonly
+			onclick="sample6_execDaumPostcode()"
+			value="<%=info.getPost()%>">
+			<!-- disabledµµ Àá±İ ±â´É ¼öÇà : Àü¼Û ¾ÈµÊ -->
+			<input type="button" value="¿ìÆí¹øÈ£ Ã£±â"
+			onclick="sample6_execDaumPostcode()">
+		</td>
+	</tr>
+	<tr>
+		<td class="m3"> 
+			<input type="text" id="sample6_address" 
+			placeholder="ÁÖ¼Ò" name="addr1" class="box"
+			maxlength="50" size="40" readonly
+			value="<%=info.getAddr1()%>">
+		</td>
+	</tr>
+	<tr>
+		<td class="m3">
+			<input type="text" id="sample6_address2" 
+			placeholder="»ó¼¼ÁÖ¼Ò" name="addr2" class="box"
+			maxlength="50" size="40"
+			value="<%=info.getAddr2()%>">
+		</td>
+	</tr>
+	<tr>
+		<th class="m2" colspan="2">
+		<input type="button" value="¼öÁ¤"
+		onclick="checkForm();">
+		<input type="button" value="Ãë¼Ò"
+		onclick="cancel();">
+		</th>
+	</tr>
+	</table>	
+	</form>	 
+</div> 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

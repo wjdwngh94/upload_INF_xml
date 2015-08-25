@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="EUC-KR"%>
-    
 <!-- memberInput_ok.jsp -->
 <!-- 
 	memberInput.jsp에서 넘어온 데이터를 가지고(8개)
