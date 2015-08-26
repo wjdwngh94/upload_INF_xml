@@ -1,7 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="EUC-KR"%>
 <!-- memberEdit.jsp : no를 가지고 회원 정보를 불러온다. -->
+<!-- ConnectionPoolBean을 application 영역에 생성 -->
+<jsp:useBean id="pool" class="my.db.ConnectionPoolBean" 
+													scope="application"/>
+<!-- mbdao라는 고객을 생성 -->													
 <jsp:useBean id="mbdao" class="my.member.MemberDAO"/>
+<!-- pool의 정보를 mbdao에게 주입 -->
+<jsp:setProperty name="mbdao" property="pool"
+												value="<%=pool%>"/>
 <%
 	String tmp = request.getParameter("no");
 	int no = 0;

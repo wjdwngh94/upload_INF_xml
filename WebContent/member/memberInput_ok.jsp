@@ -12,6 +12,14 @@
 <!-- request에서 전송되는 모든 데이터를 mbdto에서 수신 -->
 <jsp:setProperty name="mbdto" property="*"/>
 
+<!-- ConnectionPoolBean을 application 영역에 생성 -->
+<jsp:useBean id="pool" class="my.db.ConnectionPoolBean" 
+													scope="application"/>
+<!-- mbdao라는 고객을 생성 -->													
+<jsp:useBean id="mbdao" class="my.member.MemberDAO"/>
+<!-- pool의 정보를 mbdao에게 주입 -->
+<jsp:setProperty name="mbdao" property="pool"
+												value="<%=pool%>"/>
 <%		
 		//권한은 따로 설정
 		mbdto.setPower("normal");//일반회원으로 설정
@@ -22,7 +30,6 @@
 			return;
 		}
 		
-		MemberDAO mbdao = new MemberDAO();
 		boolean check = mbdao.checkMember(mbdto.getId()); 
 		//true : 가입, false : 거절
 		if(!check){//check == false%>

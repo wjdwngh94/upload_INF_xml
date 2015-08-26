@@ -6,7 +6,14 @@
 <!-- 파라미터를 mbdto에 수신 -->
 <jsp:setProperty name="mbdto" property="*"/>
 
+<!-- ConnectionPoolBean을 application 영역에 생성 -->
+<jsp:useBean id="pool" class="my.db.ConnectionPoolBean" 
+													scope="application"/>
+<!-- mbdao라는 고객을 생성 -->													
 <jsp:useBean id="mbdao" class="my.member.MemberDAO"/>
+<!-- pool의 정보를 mbdao에게 주입 -->
+<jsp:setProperty name="mbdao" property="pool"
+												value="<%=pool%>"/>
 
 <%
 	boolean result = mbdao.editMember(mbdto);

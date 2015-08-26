@@ -12,8 +12,8 @@ public class ConnectionPoolBean {
 		increment = 3;// pool장에 con객체가 더 필요하면 3개 증가 시키기 위해
 		ht = new Hashtable<Connection, Boolean>(5);// pool장에 5개의 객체를 넣기 위해
 		url = "jdbc:oracle:thin:@localhost:1521:xe";
-		user = "web";
-		pass = "web";
+		user = "jsp1";
+		pass = "jsp1";
 		Class.forName("oracle.jdbc.driver.OracleDriver");
 
 		// Connection 5개 생성

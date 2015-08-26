@@ -43,9 +43,12 @@
 					<%} else{%>
 					<a href="<%=request.getContextPath()%>/login/login.jsp">로그인 </a>|
 					<%} %>
+					<a href="<%=request.getContextPath()%>/board/list.jsp">게시판 </a>|
 					<a href="javascript:openMember();">회원가입</a> | <a
-					href="<%=request.getContextPath()%>/member/memberList.jsp">회원목록</a>
-					| <a href="<%=request.getContextPath()%>/intro.jsp">소개글</a></th>
+					href="<%=request.getContextPath()%>/member/memberList.jsp">회원목록| </a>
+					<!-- 회원목록같은경우는 power의 관리자여부에 따라 제한을 두는것이좋다. -->
+					<!-- 관리자 설정은 web이아닌 데이터베이스에서 관리한다.(안전성) -->
+					<a href="<%=request.getContextPath()%>/intro.jsp">소개글</a></th>
 			</tr>
 			<tr>
 				<th width="20%" valign="top" align="left"><a
