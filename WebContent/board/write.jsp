@@ -1,100 +1,78 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
-
-<jsp:useBean id="pool" class="my.db.ConnectionPoolBean"
-	scope="application" />
-<!-- mbdao라는 고객을 생성 -->
-<jsp:useBean id="bddao" class="my.board.BoardDAO" />
-<!-- pool의 정보를 mbdao에게 주입 -->
-<jsp:setProperty name="bddao" property="pool" value="<%=pool%>" />
-
-<!-- memberInput.jsp의 내용을 붙여넣고 수정 -->
-<html>
-<head>
-<title>새로운 글쓰기</title>
-<link rel="stylesheet" type="text/css" href="../style.css">
+    pageEncoding="EUC-KR"%>
+<!-- write.jsp : 글 쓰기 페이지 -->
+<%@ include file="/top.jsp"%>
 <script type="text/javascript">
-	function checkForm() {
-		//폼 검사(name)
-		if (!f.pw.value) {
+	function formCheck(){
+		//f라는 이름의 form을 검사(전부다)
+		if(!f.writer.value){
+			alert("작성자를 입력하세요");
+			f.writer.focus();
+			return false;//거절
+		}else if(!f.title.value){
+			alert("제목을 입력하세요");
+			f.title.focus();
+			return false;//거절
+		}else if(!f.content.value){
+			alert("내용을 입력하세요");
+			f.content.focus();
+			return false;//거절
+		}else if(!f.pw.value){
 			alert("비밀번호를 입력하세요");
 			f.pw.focus();
-			return;
-		} else if (f.pw.value.length < 3) {
-			alert("비밀번호가 좀 짧네요?");
-			f.pw.select();//해당텍스트 선택
-			return;
+			return false;//거절
 		}
-
-		//폼 전송(document 문서 객체 활용)
-		//f라는 form을 submit 버튼을 누른 것과 같이 처리하라
-		document.f.submit();
-	}
-	function cancel() {
-		var check = window.confirm("정말 창을 닫으시겠습니까?");
-		//alert(check);
-		if (check) {//true
-			window.close();
-		}
+		
+		//return true;//전송을 허락한다(생략 가능)
 	}
 </script>
-</head>
-<body>
-	<div align="center">
-		<form name="f" action="writePro.jsp" method="post">
-			<!-- 필요한 데이터는 hidden으로 첨부한다. -->
-			<h2>글쓰기</h2>
-			<hr color="red" width="300">
-			<table width="500" class="outline">
-				<tr>
-					<th class="m2">등록자</th>
-					<td class="m3"><input type="text" name="writer" class="box"
-						maxlength="15" size="10"></td>
-				</tr>
-				<tr>
-					<th class="m2">제목</th>
-					<td class="m3"><input type="text" name="title" class="box"
-						maxlength="15" size="10"></td>
-				</tr>
-				<tr>
-					<th class="m2" rowspan="10">내용</th>
-					<td class="m3" rowspan="10"><textarea name="content" class="box"></textarea></td>
-				</tr>
-				<tr>
-				</tr>
-				<tr>
-				</tr>
-				<tr>
-				</tr>
-				<tr>
-				</tr>
-				<tr>
-				</tr>
-				<tr>
-				</tr>
-				<tr>
-				</tr>
-				<tr>
-				</tr>
-				<tr>
-				</tr>
-				<tr>
-				</tr>
-				<tr>
-					<th class="m2">비밀번호</th>
-					<td class="m3"><input type="password" name="pw" class="box"
-						maxlength="20" size="20"></td>
-				</tr>
-				<tr>
-					<th class="m2" colspan="2"><input type="button" value="등록"
-						onclick="checkForm();"> <input type="button" value="취소"
-						onclick="cancel();"></th>
-				</tr>
-			</table>
-		</form>
-	</div>
-</body>
-</html>
+<div align="center">
+	<h1>글 쓰 기</h1>
+	<form name="f" action="writePro.jsp" method="post"
+				onsubmit="return formCheck();">
+	<!-- onsubmit : submit을 실행하면 발생되는 이벤트
+			return formCheck() 라고 적으면 
+			formCheck() 의 반환값을 보고 결정하겠다는 뜻 -->
+	<table class="outline" width="650">
+	<tr>
+		<th class="m2" width="100">작성자</th>
+		<td class="m3">
+		<input type="text" name="writer" maxlength="10"
+		size="10" class="box">
+		</td>
+	</tr>
+	<tr>
+		<th class="m2" width="100">제목</th>
+		<td class="m3">
+		<input type="text" name="title" maxlength="33"
+		size="50" class="box">
+		</td>
+	</tr>
+	<tr>
+		<th class="m2" width="100">내용</th>
+		<td class="m3">
+		<textarea name="content" class="box" rows="10"
+		cols="55"></textarea>
+		</td>
+	</tr>
+	<tr>
+		<th class="m2" width="100">비밀번호</th>
+		<td class="m3">
+		<input type="password" name="pw" maxlength="15"
+		size="15" class="box">
+		</td>
+	</tr>
+	<tr>
+		<th class="m2" colspan="2">
+			<input type="submit" value="등록">
+			<input type="button" value="목록"
+					onclick="location.href='list.jsp';">
+		</th>
+	</tr>
+	</table>
+	</form>
+</div>
+<%@ include file="/bottom.jsp"%>
 
 
 

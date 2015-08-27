@@ -1,62 +1,84 @@
-<%@page import="my.board.BoardDTO"%>
-<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
-
-<!-- ConnectionPoolBean을 application 영역에 생성 -->
-<jsp:useBean id="pool" class="my.db.ConnectionPoolBean"
-	scope="application" />
-
-<jsp:useBean id="bddao" class="my.board.BoardDAO" />
-
-<jsp:setProperty name="bddao" property="pool" value="<%=pool%>" />
-
-<%@ include file="../top.jsp"%>
-
-<script type="text/javascript">
-			function openWrite(){
-				//새창을 열어주는 코드
-				//window.open("주소","이름","상태값");
-				window.open("<%=request.getContextPath()%>/board/write.jsp", "",
-				"width=600, height=700");
-	}
-</script>
-
+    pageEncoding="EUC-KR"%>
+<%@ page import="java.util.*, my.board.*" %>
+<!-- list.jsp : 게시글 목록 페이지 -->
+<%@ include file="/top.jsp"%>
+<jsp:useBean id="bdao" class="my.board.BoardDAO"/>
 <div align="center">
-
-	<a href="javascript:openWrite();">글쓰기</a>
+<%
+	//검색어 수신
+	request.setCharacterEncoding("euc-kr");
+	String search = request.getParameter("search");
+	String searchString = request.getParameter("searchString");
 	
-	<table class="outline" width="600">
-		<!-- 제목 -->
-
-		<tr>
-			<th class="m2">번호</th>
-			<th class="m2">제목</th>
-			<th class="m2">작성자</th>
-			<th class="m2">작성일</th>
-			<th class="m2">조회수</th>
-			<th class="m2">추천수</th>
-		</tr>
-		<!-- 데이터 -->
-
-		<%
-			ArrayList<BoardDTO> list = bddao.listBoard();
-			for (BoardDTO bddto : list) {
-		%>
-		<tr>
-			<th class="m3"><%=bddto.getNo()%></th>
-			<th class="m3"><%=bddto.getTitle()%></th>
-			<th class="m3"><%=bddto.getWriter()%></th>
-			<th class="m3"><%=bddto.getRegdate()%></th>
-			<th class="m3"><%=bddto.getReadcount()%></th>
-			<th class="m3"><%=bddto.getRecommand()%></th>
-		</tr>
-		<%
-			}
-		%>
-	</table>
-	<br>
+	//모드 판정
+	ArrayList<BoardDTO> list;
+	if(search!=null&&searchString!=null
+					&&!searchString.trim().equals("")){
+		list = bdao.searchBoard(search, searchString);//검색
+	}else{
+		list = bdao.listBoard();//목록
+	}
+%> 
+<h1>search : <%=search%>, 
+					searchString : <%=searchString%></h1>
+<!-- 글쓰기 버튼 -->
+<table width="700">
+	<tr><td align="right">
+	<input type="button" value="글쓰기"
+							onclick="location.href='write.jsp'">
+	</td></tr>
+</table>
+<br>
+<!-- 목록 출력 -->
+<table class="outline" width="700">
+	<!-- 제목줄 -->
+	<tr>
+		<th class="m2">번호</th>
+		<th class="m2">제목</th>
+		<th class="m2">작성자</th>
+		<th class="m2">작성일</th>
+		<th class="m2">조회수</th>
+		<th class="m2">추천수</th>
+	</tr>
+	<!-- 내용줄 -->
+	<%for(BoardDTO bdto : list){ %>
+	<tr align="center">
+		<td class="m3"><%=bdto.getNo()%></td>
+		<td class="m3" align="left" width="40%">
+		<a href="content.jsp?no=<%=bdto.getNo()%>">
+			<%=bdto.getTitle()%>
+		</a>
+		</td>
+		<td class="m3"><%=bdto.getWriter()%></td>
+		<td class="m3"><%=bdto.getTime()%></td> 
+		<td class="m3"><%=bdto.getReadcount()%></td>
+		<td class="m3"><%=bdto.getRecommand()%></td>
+	</tr>
+	<%} %>
+</table>
+<br><br>
+<!-- 검색창 -->
+<form method="post">
+	<select name="search" class="box">
+		<option value="title">제목
+		<option value="writer">작성자
+	</select>
+	<input type="text" class="box" name="searchString">
+	<input type="submit" value="검색"> 
+</form>
 </div>
-<%@ include file="../bottom.jsp"%>
+<%@ include file="/bottom.jsp"%>
+
+	
+
+
+
+
+
+
+
+
+
 
 
