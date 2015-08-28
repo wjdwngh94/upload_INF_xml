@@ -32,48 +32,56 @@ public class BoardDTO {
 		return no;
 	}
 	public void setNo(int no) {
+		//System.out.println("setNo()");
 		this.no = no;
 	}
 	public String getWriter() {
 		return writer;
 	}
 	public void setWriter(String writer) {
+		//System.out.println("setWriter()");
 		this.writer = writer;
 	}
 	public String getTitle() {
 		return title;
 	}
 	public void setTitle(String title) {
+		//System.out.println("setTitle()");
 		this.title = title;
 	}
 	public String getContent() {
 		return content;
 	}
 	public void setContent(String content) {
+		//System.out.println("setContent()");
 		this.content = content;
 	}
 	public String getPw() {
 		return pw;
 	}
 	public void setPw(String pw) {
+		//System.out.println("setPw()");
 		this.pw = pw;
 	}
 	public String getRegdate() {
 		return regdate;
 	}
 	public void setRegdate(String regdate) {
+		//System.out.println("setRegdate()");
 		this.regdate = regdate;
 	}
 	public int getReadcount() {
 		return readcount;
 	}
 	public void setReadcount(int readcount) {
+		//System.out.println("setReadcount()");
 		this.readcount = readcount;
 	}
 	public int getRecommand() {
 		return recommand;
 	}
 	public void setRecommand(int recommand) {
+		//System.out.println("setRecommand()");
 		this.recommand = recommand;
 	}
 	//오늘이면 시간을, 이전에 작성했으면 날짜를 반환하는 메소드

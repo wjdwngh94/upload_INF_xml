@@ -85,6 +85,25 @@ public class BoardDAO {
 		}
 	}
 
+	public ArrayList<BoardDTO> searchBoard(String search, String searchString,
+			int start, int end) throws SQLException {
+		String sql = "select * from (select rownum rn, A.* from + "
+				+ "(select * from board where " + search
+				+ " like ?order by no desc)A) where rn between ? and ?";
+		try {
+			connect();
+			ps = con.prepareStatement(sql);
+			ps.setString(1, "%" + searchString + "%");
+			ps.setInt(2, start);
+			ps.setInt(3, end);
+			rs = ps.executeQuery();
+			ArrayList<BoardDTO> list = makeList(rs);
+			return list;
+		} finally {
+			close();
+		}
+	}
+
 	// list = bdao.searchBoard(search, searchString);//검색
 	public ArrayList<BoardDTO> searchBoard(String search, String searchString)
 			throws SQLException {
@@ -96,6 +115,24 @@ public class BoardDAO {
 			ps.setString(1, "%" + searchString + "%");
 			rs = ps.executeQuery();
 			// ArrayList<BoardDTO>로 변경
+			ArrayList<BoardDTO> list = makeList(rs);
+			return list;
+		} finally {
+			close();
+		}
+	}
+
+	public ArrayList<BoardDTO> listBoard(int start, int end)
+			throws SQLException {
+		String sql = "select * from (select rownum rn, "
+				+ "A.* from (select * from board order "
+				+ "by no desc)A) where rn between ? and ?";
+		try {
+			connect();
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, start);
+			ps.setInt(2, end);
+			rs = ps.executeQuery();
 			ArrayList<BoardDTO> list = makeList(rs);
 			return list;
 		} finally {
@@ -168,13 +205,81 @@ public class BoardDAO {
 
 	// bdao.plusCount(no);
 	public void plusCount(int no) throws SQLException {
-		String sql = "update board set readcount=readcount+1 where no=?";
+		String sql = "update board " + "set readcount = readcount+1 "
+				+ "where no=?";
 		try {
 			connect();
 			ps = con.prepareStatement(sql);
 			ps.setInt(1, no);
-			// select빼고는 다 int이다.
 			int result = ps.executeUpdate();
+		} finally {
+			close();
+		}
+	}
+
+	// boolean result = bdao.checkPw(no, pw);
+	public boolean checkPw(int no, String pw) throws SQLException {
+		String sql = "select no from board where no=? and pw=?";
+		// select pw from board where no=?
+		// select no from board where no=? and pw=?
+		try {
+			connect();
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, no);
+			ps.setString(2, pw);
+			rs = ps.executeQuery();
+			return rs.next();
+		} finally {
+			close();
+		}
+	}
+
+	// boolean result = bdao.deleteBoard(no);
+	public boolean deleteBoard(int no) throws SQLException {
+		String sql = "delete board where no=?";
+		try {
+			connect();
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, no);
+			int result = ps.executeUpdate();
+			if (result > 0)
+				return true;
+			else
+				return false;
+		} finally {
+			close();
+		}
+	}
+
+	// boolean result = bdao.editBoard(bdto);
+	public boolean editBoard(BoardDTO bdto) throws SQLException {
+		String sql = "update board set title=?, content=? " + "where no=?";
+		try {
+			connect();
+			ps = con.prepareStatement(sql);
+			ps.setString(1, bdto.getTitle());
+			ps.setString(2, bdto.getContent());
+			ps.setInt(3, bdto.getNo());
+			int result = ps.executeUpdate();
+			if (result > 0)
+				return true;
+			else
+				return false;
+		} finally {
+			close();
+		}
+	}
+
+	// int count = bdao.getBoardCount();
+	public int getBoardCount() throws SQLException {
+		String sql = "select count(*) from board";
+		try {
+			connect();
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();// 데이터 무조건 1개
+			rs.next();
+			int count = rs.getInt(1);
+			return count;
 		} finally {
 			close();
 		}

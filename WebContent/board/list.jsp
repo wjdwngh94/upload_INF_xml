@@ -1,76 +1,157 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
-<%@ page import="java.util.*, my.board.*" %>
+	pageEncoding="EUC-KR"%>
+<%@ page import="java.util.*, my.board.*"%>
 <!-- list.jsp : 게시글 목록 페이지 -->
 <%@ include file="/top.jsp"%>
-<jsp:useBean id="bdao" class="my.board.BoardDAO"/>
+<jsp:useBean id="bdao" class="my.board.BoardDAO" />
 <div align="center">
-<%
-	//검색어 수신
-	request.setCharacterEncoding("euc-kr");
-	String search = request.getParameter("search");
-	String searchString = request.getParameter("searchString");
-	
-	//모드 판정
-	ArrayList<BoardDTO> list;
-	if(search!=null&&searchString!=null
-					&&!searchString.trim().equals("")){
-		list = bdao.searchBoard(search, searchString);//검색
-	}else{
-		list = bdao.listBoard();//목록
-	}
-%> 
-<h1>search : <%=search%>, 
-					searchString : <%=searchString%></h1>
-<!-- 글쓰기 버튼 -->
-<table width="700">
-	<tr><td align="right">
-	<input type="button" value="글쓰기"
-							onclick="location.href='write.jsp'">
-	</td></tr>
-</table>
-<br>
-<!-- 목록 출력 -->
-<table class="outline" width="700">
-	<!-- 제목줄 -->
-	<tr>
-		<th class="m2">번호</th>
-		<th class="m2">제목</th>
-		<th class="m2">작성자</th>
-		<th class="m2">작성일</th>
-		<th class="m2">조회수</th>
-		<th class="m2">추천수</th>
-	</tr>
-	<!-- 내용줄 -->
-	<%for(BoardDTO bdto : list){ %>
-	<tr align="center">
-		<td class="m3"><%=bdto.getNo()%></td>
-		<td class="m3" align="left" width="40%">
-		<a href="content.jsp?no=<%=bdto.getNo()%>">
-			<%=bdto.getTitle()%>
-		</a>
-		</td>
-		<td class="m3"><%=bdto.getWriter()%></td>
-		<td class="m3"><%=bdto.getTime()%></td> 
-		<td class="m3"><%=bdto.getReadcount()%></td>
-		<td class="m3"><%=bdto.getRecommand()%></td>
-	</tr>
-	<%} %>
-</table>
-<br><br>
-<!-- 검색창 -->
-<form method="post">
-	<select name="search" class="box">
-		<option value="title">제목
-		<option value="writer">작성자
-	</select>
-	<input type="text" class="box" name="searchString">
-	<input type="submit" value="검색"> 
-</form>
+	<%
+		//페이지 처리 코드
+		int pageSize = 5;//한페이지당 5개씩 보여주겠다.
+
+		//파라미터 수신(페이지 번호)
+		String pageNo = request.getParameter("page");
+		int curPage = 0;
+		try {
+			curPage = Integer.parseInt(pageNo); //문자
+			if (curPage <= 0)
+				throw new Exception(); //0이하
+		} catch (Exception e) {
+			curPage = 1;//1page가 나오도록 처리
+		}
+
+		//시작 순서 = 페이지크기 * 현재페이지 - (페이지크기-1)
+		int startRow = pageSize * curPage - (pageSize - 1);
+
+		//종료 순서 = 시작 순서 + 페이지크기 - 1;
+		int endRow = startRow + pageSize - 1;
+
+		//종료 순서는 게시글 수보다 많을 수 없다
+		int count = bdao.getBoardCount();
+		if (endRow > count)
+			endRow = count;
+	%>
+	<h3>
+		curPage :
+		<%=curPage%>, startRow :
+		<%=startRow%>, endRow :
+		<%=endRow%>, count :
+		<%=count%></h3>
+
+	<%
+		//검색어 수신
+		request.setCharacterEncoding("euc-kr");
+		String search = request.getParameter("search");
+		String searchString = request.getParameter("searchString");
+
+		//모드 판정
+		ArrayList<BoardDTO> list;
+		if (search != null && searchString != null
+				&& !searchString.trim().equals("")) {
+			//list = bdao.searchBoard(search, searchString);//검색
+			list = bdao.searchBoard(search, searchString, startRow, endRow);
+		} else {
+			//list = bdao.listBoard();//목록
+			list = bdao.listBoard(startRow, endRow);
+		}
+	%>
+	<h2>
+		search :
+		<%=search%>, searchString :
+		<%=searchString%></h2>
+	<!-- 글쓰기 버튼 -->
+	<table width="700">
+		<tr>
+			<td align="right"><input type="button" value="글쓰기"
+				onclick="location.href='write.jsp'"></td>
+		</tr>
+	</table>
+	<!-- 목록 출력 -->
+	<table class="outline" width="700">
+		<!-- 제목줄 -->
+		<tr>
+			<th class="m2">번호</th>
+			<th class="m2">제목</th>
+			<th class="m2">작성자</th>
+			<th class="m2">작성일</th>
+			<th class="m2">조회수</th>
+			<th class="m2">추천수</th>
+		</tr>
+		<!-- 내용줄 -->
+		<%
+			for (BoardDTO bdto : list) {
+		%>
+		<tr align="center">
+			<td class="m3"><%=bdto.getNo()%></td>
+			<td class="m3" align="left" width="40%"><a
+				href="content.jsp?no=<%=bdto.getNo()%>"> <%=bdto.getTitle()%>
+			</a></td>
+			<td class="m3"><%=bdto.getWriter()%></td>
+			<td class="m3"><%=bdto.getTime()%></td>
+			<td class="m3"><%=bdto.getReadcount()%></td>
+			<td class="m3"><%=bdto.getRecommand()%></td>
+		</tr>
+		<%
+			}
+		%>
+	</table>
+	<br>
+	<%
+		//네비게이터 구현
+		int pageBlock = 5;//한페이지에 5개의 링크를 출력
+		int pageCount = //총 페이지 수
+		count / pageSize + (count % pageSize == 0 ? 0 : 1);
+
+		//시작 블럭 = 1~5 -> 1, 6~10 -> 6
+		int startBlock = (curPage - 1) / pageBlock * pageBlock + 1;
+		int endBlock = startBlock + pageBlock - 1;
+		if (endBlock > pageCount)
+			endBlock = pageCount;
+	%>
+	<h2>
+		pageCount :
+		<%=pageCount%>, startBlock :
+		<%=startBlock%>, endBlock :
+		<%=endBlock%></h2>
+	<%
+		//이전 출력
+		if (startBlock > pageBlock) {
+	%>
+	<a href="list.jsp?page=<%=startBlock - 1%>">[이전]</a>
+	<%
+		}
+		//번호 출력 ( startBlock 부터 endBlock 까지 )
+		for (int i = startBlock; i <= endBlock; ++i) {
+	%>
+	<%
+		if (curPage == i) {
+	%>
+	<font size="5" color="black"><%=i%></font>
+	<%
+		} else {
+	%>
+	<a href="list.jsp?page=<%=i%>"><%=i%></a>
+	<%
+		}
+		}
+		//다음 출력
+		if(pageCount>endBlock){%>
+	<a href="list.jsp?page=<%=startBlock+pageBlock %>">[다음]</a>
+	<%} 
+		%>
+	<br> <br>
+	<!-- 검색창 -->
+	<form method="post">
+		<select name="search" class="box">
+			<option value="title">제목
+			<option value="writer">작성자
+		</select> <input type="text" class="box" name="searchString"> <input
+			type="submit" value="검색">
+	</form>
 </div>
 <%@ include file="/bottom.jsp"%>
 
-	
+
 
 
 
