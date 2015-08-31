@@ -49,17 +49,93 @@ public class BoardDAO {
 
 	// 이후의 작업들은 메소드 단위로 처리
 
+	// 답글일 떄에는 re_step계산에 초점을 맞춰야 한다.
+	// boolean result = bdao.insertReply(bdto);
+	public boolean insertReply(BoardDTO bdto) throws SQLException {
+		String sql = "select (select min(re_step) from board "
+				+ "where ref=? and re_level=? and re_step>?) "
+				+ "as min, (select max(re_step) from board "
+				+ "where ref=? and re_level>? and re_step>?) "
+				+ "as max from dual";
+		try {
+			connect();
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, bdto.getRef());
+			ps.setInt(2, bdto.getRe_level());
+			ps.setInt(3, bdto.getRe_step());
+
+			ps.setInt(4, bdto.getRef());
+			ps.setInt(5, bdto.getRe_level());
+			ps.setInt(6, bdto.getRe_step());
+
+			rs = ps.executeQuery(); // rs에는 min이라는 항목, max라는 두개의 항목이 있다.
+			rs.next();
+			int row = 0; // 계산된 re_step의 값을 저장 시켜 두겠다.
+			if (rs.getInt("min") > 0) {
+				// 1번 조건의 결과가 있으면
+				// 예를 들어 5라는 결과가 나왔으면
+				row = rs.getInt("min");
+
+				// re_step이 5인 글부터 모두 re_step 1씩 증가 시켜 놓고
+				sql = "update board set re_step = re_step +1 "
+						+ "where ref=? and re_step>=?";
+				ps = con.prepareStatement(sql);
+				ps.setInt(1, bdto.getRef());
+				ps.setInt(2, row);
+				int result = ps.executeUpdate();
+				// 그 뒤 데이터 추가 한다.
+			} else {
+				// 1번 조건의 결과가 없으면
+				// 2번 조건의 결과를 확인한다.
+				if (rs.getInt("max") > 0) {
+					// 2번 조건의 결과가 있다면
+
+					// 결과값 +1 의 re_step위치에 데이터 추가
+					row = rs.getInt("max") + 1;
+				} else {// 2번 조건의 결과가 없다면(답글 없음)
+					// 원본글 + 1
+					row = bdto.getRe_step() + 1;
+				}
+			}
+			// 데이터 추가
+			sql = "insert into board values(board_seq.nextval,"
+					+ "?,?,?,?,sysdate,0,0,?,?,?)";
+			ps = con.prepareStatement(sql);
+			ps.setString(1, bdto.getWriter());
+			ps.setString(2, bdto.getTitle());
+			ps.setString(3, bdto.getContent());
+			ps.setString(4, bdto.getPw());
+			ps.setInt(5, bdto.getRef());// ref
+			ps.setInt(6, row);// re_step의 계산된 값(row)
+			ps.setInt(7, bdto.getRe_level() + 1);// re_level
+
+			int result = ps.executeUpdate();
+			if (result > 0)
+				return true;
+			else
+				return false;
+
+		} finally {
+			close();
+		}
+	}
+
 	// boolean result = bdao.insertBoard(bdto);
+	// 새글일 때에는 ref를 계산해줘야 한다.
 	public boolean insertBoard(BoardDTO bdto) throws SQLException {
 		String sql = "insert into board values(board_seq.nextval,"
-				+ "?,?,?,?,sysdate,0,0)";
+				+ "?,?,?,?,sysdate,0,0,?,?,?)";
 		try {
+			int max = findNumber() + 1; // 가장큰 no를 찾아서 + 1
 			connect();
 			ps = con.prepareStatement(sql);
 			ps.setString(1, bdto.getWriter());
 			ps.setString(2, bdto.getTitle());
 			ps.setString(3, bdto.getContent());
 			ps.setString(4, bdto.getPw());
+			ps.setInt(5, 1);// ref
+			ps.setInt(6, 0);// re_step
+			ps.setInt(7, 0);// re_level
 			int result = ps.executeUpdate();
 			if (result > 0)
 				return true;
@@ -87,9 +163,10 @@ public class BoardDAO {
 
 	public ArrayList<BoardDTO> searchBoard(String search, String searchString,
 			int start, int end) throws SQLException {
-		String sql = "select * from (select rownum rn, A.* from + "
-				+ "(select * from board where " + search
-				+ " like ?order by no desc)A) where rn between ? and ?";
+		String sql = "select * from (select rownum rn, "
+				+ "A.* from (select * from board where " + search
+				+ " like ? order by ref desc, re_step asc)A) "
+				+ "where rn between ? and ?";
 		try {
 			connect();
 			ps = con.prepareStatement(sql);
@@ -97,6 +174,7 @@ public class BoardDAO {
 			ps.setInt(2, start);
 			ps.setInt(3, end);
 			rs = ps.executeQuery();
+			// ArrayList<BoardDTO>로 변경
 			ArrayList<BoardDTO> list = makeList(rs);
 			return list;
 		} finally {
@@ -126,7 +204,7 @@ public class BoardDAO {
 			throws SQLException {
 		String sql = "select * from (select rownum rn, "
 				+ "A.* from (select * from board order "
-				+ "by no desc)A) where rn between ? and ?";
+				+ "by ref desc, re_step asc)A) where rn between ? and ?";
 		try {
 			connect();
 			ps = con.prepareStatement(sql);
@@ -170,10 +248,14 @@ public class BoardDAO {
 			String regdate = rs.getString("regdate");
 			int readcount = rs.getInt("readcount");
 			int recommand = rs.getInt("recommand");
+			// 답글 관련 항목 추가로 추출
+			int ref = rs.getInt("ref");
+			int re_step = rs.getInt("re_step");
+			int re_level = rs.getInt("re_level");
 
 			// 2-2. 데이터 포장
 			BoardDTO bdto = new BoardDTO(no, writer, title, content, pw,
-					regdate, readcount, recommand);
+					regdate, readcount, recommand, ref, re_step, re_level);
 
 			// 2-3. 데이터 등록(list)
 			list.add(bdto);

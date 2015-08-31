@@ -45,7 +45,9 @@
 <%@ include file="/top.jsp"%>
 <script type="text/javascript">
 	function sendReply(){
-		alert("아직 구현 준비중이에요");
+		//alert("아직 구현 준비중이에요");
+		//replyForm이라는 이름의 폼을 전송
+		document.replyForm.submit();
 	}
 	function sendRec(){
 		alert("추천 기능입니다.");
@@ -60,6 +62,13 @@
 	}
 </script>
 <div align="center">
+<form name="replyForm" method="post" action="reply.jsp">
+<input type="hidden" name="no" value="<%=no%>">
+<input type="hidden" name="title" value="<%=bdto.getTitle()%>">
+<input type="hidden" name="ref" value="<%=bdto.getRef()%>">
+<input type="hidden" name="re_step" value="<%=bdto.getRe_step()%>">
+<input type="hidden" name="re_level" value="<%=bdto.getRe_level()%>">
+</form>
 	<h1>글 읽 기</h1>
 	<table class="outline" width="650">
 	<tr>

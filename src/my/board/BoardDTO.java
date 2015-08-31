@@ -13,11 +13,16 @@ public class BoardDTO {
 	private String regdate;
 	private int readcount;
 	private int recommand;
+	/* 답글 관련 3가지 상태값 추가 */
+	private int ref;
+	private int re_step;
+	private int re_level;
 	public BoardDTO() {
 		super();
 	}
 	public BoardDTO(int no, String writer, String title, String content,
-			String pw, String regdate, int readcount, int recommand) {
+			String pw, String regdate, int readcount, int recommand, int ref,
+			int re_step, int re_level) {
 		super();
 		this.no = no;
 		this.writer = writer;
@@ -27,6 +32,27 @@ public class BoardDTO {
 		this.regdate = regdate;
 		this.readcount = readcount;
 		this.recommand = recommand;
+		this.ref = ref;
+		this.re_step = re_step;
+		this.re_level = re_level;
+	}
+	public int getRef() {
+		return ref;
+	}
+	public void setRef(int ref) {
+		this.ref = ref;
+	}
+	public int getRe_step() {
+		return re_step;
+	}
+	public void setRe_step(int re_step) {
+		this.re_step = re_step;
+	}
+	public int getRe_level() {
+		return re_level;
+	}
+	public void setRe_level(int re_level) {
+		this.re_level = re_level;
 	}
 	public int getNo() {
 		return no;
