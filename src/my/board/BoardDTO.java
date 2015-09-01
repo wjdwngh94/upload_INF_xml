@@ -17,12 +17,16 @@ public class BoardDTO {
 	private int ref;
 	private int re_step;
 	private int re_level;
+	/* 파일 업로드 관련 2가지 상태값 추가 */
+	private String filename;
+	private long filesize;
+	
 	public BoardDTO() {
 		super();
 	}
 	public BoardDTO(int no, String writer, String title, String content,
 			String pw, String regdate, int readcount, int recommand, int ref,
-			int re_step, int re_level) {
+			int re_step, int re_level, String filename, long filesize) {
 		super();
 		this.no = no;
 		this.writer = writer;
@@ -35,6 +39,20 @@ public class BoardDTO {
 		this.ref = ref;
 		this.re_step = re_step;
 		this.re_level = re_level;
+		this.filename = filename;
+		this.filesize = filesize;
+	}
+	public String getFilename() {
+		return filename;
+	}
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+	public long getFilesize() {
+		return filesize;
+	}
+	public void setFilesize(long filesize) {
+		this.filesize = filesize;
 	}
 	public int getRef() {
 		return ref;

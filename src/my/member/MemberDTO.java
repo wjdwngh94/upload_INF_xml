@@ -74,8 +74,7 @@ public class MemberDTO {
 		this.gender = gender;
 	}
 	public String getPost() {
-		if(post==null) return "";
-		/*null인 경우에 외부에 보여주지 않겠다.*/
+		if(post==null)	return "";
 		return post;
 	}
 	public void setPost(String post) {
@@ -83,15 +82,13 @@ public class MemberDTO {
 	}
 	public String getAddr1() {
 		if(addr1==null) return "";
-		/*null인 경우에 외부에 보여주지 않겠다.*/
 		return addr1;
 	}
 	public void setAddr1(String addr1) {
 		this.addr1 = addr1;
 	}
 	public String getAddr2() {
-		if(addr2==null) return "";
-		/*null인 경우에 외부에 보여주지 않겠다.*/
+		if(addr2 == null) return "";
 		return addr2;
 	}
 	public void setAddr2(String addr2) {

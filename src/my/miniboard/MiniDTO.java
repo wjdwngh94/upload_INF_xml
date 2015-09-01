@@ -1,30 +1,27 @@
 package my.miniboard;
 
-//DTO : DATA TRANSFER OBJECT 포장 역할을 수행하는 클래스
-//데이터 베이스에 존재하는 항목들을 담아야 함으로 DB와 똑같은 형태로 만든다.
-//일반적으로 DAO와 DTO는 DB TABLE의 수와 같게 만든다.
+//DTO : Data Transfer Object
+//포장 역할을 수행하는 클래스
+//DB 테이블과 동일한 형태로 생성한다.
 public class MiniDTO {
 	private int no;
 	private String writer;
 	private String content;
-	private String regdate;
-
-	//생성자 자동 완성 : 기본생성자와 모든 매개변수를 갖는 생성장
-	//Source -> Generator Constructor using fields
-	
-	//Setter & Getter : 모든 setter/getter 기본적으로 생성후 걸러낸다.
-	//Source -> Generator Getters and Setters
-	
-	public MiniDTO(int no, String writer, String content, String regdate) {
+	private String joindate;
+	//생성자 자동완성 : 기본생성자와 모든 매개변수를 갖는 생성자
+	//Source -> Generate Constructor using fields
+	public MiniDTO() {
+		super();
+	}
+	public MiniDTO(int no, String writer, String content, String joindate) {
 		super();
 		this.no = no;
 		this.writer = writer;
 		this.content = content;
-		this.regdate = regdate;
+		this.joindate = joindate;
 	}
-	public MiniDTO() {
-		super();
-	}
+	//Setter&getter : 모든 setter/getter 기본적으로 생성
+	//Source -> Generate Getters and Setters
 	public int getNo() {
 		return no;
 	}
@@ -43,11 +40,20 @@ public class MiniDTO {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public String getRegdate() {
-		return regdate;
+	public String getJoindate() {
+		return joindate;
 	}
-	public void setRegdate(String regdate) {
-		this.regdate = regdate;
+	public void setJoindate(String joindate) {
+		this.joindate = joindate;
 	}
-	
 }
+
+
+
+
+
+
+
+
+
+

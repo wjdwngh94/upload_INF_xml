@@ -1,40 +1,46 @@
-<%@page import="com.sun.corba.se.pept.transport.Connection"%>
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
-<%@page import="java.sql.*"%>
-<%@page import="my.miniboard.*"%>
-<!-- delete.jsp : 이름을 받아 일치 삭제  -->
+    pageEncoding="EUC-KR"%>
+<%@ page import="my.miniboard.*" %>
+<!-- delete.jsp : 이름을 받아 일치 삭제 -->
 <%
-	//작성자(name)를 받기
+	//작성자(writer) 받기
 	request.setCharacterEncoding("euc-kr");
-	String name = request.getParameter("name");
-	if (name == null || name.trim().equals("")) {
-		response.sendRedirect("home.jsp");//쫓아내겠다.
+	String writer = request.getParameter("writer");
+	if(writer==null||writer.trim().equals("")){
+		response.sendRedirect("home.jsp");
 		return;
 	}
-	//DAO시켜서 데이터 삭제 요청한다.
+	
+	//DAO 시켜서 데이터 삭제 요청
 	MiniDAO dao = new MiniDAO();
-
-	//난 처리과정이아니라 결과만 알고 싶다
-	//boolean char int모두 가능하다.
-	boolean result = dao.delete(name);
-	//dao.delete : 슈퍼가서 사와
-	//dao.delete(name) : 슈퍼가서 a를 사와
-
+	boolean result = dao.delete(writer); 
+	
+	//사용자에게 알림
 	String msg = "", url = "";
-	if (result) {
-
-		msg = "삭제 성공";
+	if(result){
+		msg = "삭제 성공!";
 		url = "list.jsp";
-
-	} else {
-
-		msg = "삭제 실패";
+	}else{
+		msg = "삭제 실패...";
 		url = "home.jsp";
-
 	}
 %>
 <script type="text/javascript">
 	alert("<%=msg%>");
-	location.href = "<%=url%>";
+	location.href="<%=url%>";
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

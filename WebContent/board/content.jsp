@@ -1,8 +1,9 @@
+<%@page import="java.text.DecimalFormat"%>
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
-<%@ page import="my.board.*, java.util.*" %>
-<!-- content.jsp : °Ô½Ã±Û ¹øÈ£¸¦ °¡Áö°í ³»¿ëÀ» º¸¿©ÁÖ´Â ÆäÀÌÁö -->
-<jsp:useBean id="bdao" class="my.board.BoardDAO"/>
+	pageEncoding="EUC-KR"%>
+<%@ page import="my.board.*, java.util.*"%>
+<!-- content.jsp : ï¿½Ô½Ã±ï¿½ ï¿½ï¿½È£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ -->
+<jsp:useBean id="bdao" class="my.board.BoardDAO" />
 <%
 	String tmp = request.getParameter("no");
 	int no = 0;
@@ -14,29 +15,29 @@
 		return;
 	}
 	
-	//¾Æ¹«¶§³ª Á¶È¸¼ö¸¦ Áõ°¡½ÃÅ°¸é ¾ÈµÇ¹Ç·Î...sessionÀ» ÀÌ¿ë
-	//session¿¡ readTable ÀÌ¶ó´Â ÀÌ¸§ÀÇ SetÀ» Áı¾î³Ö°í
-	//²¨³»¼­ È®ÀÎÇÏ¿© ÀĞÀº ±ÛÀÎÁö¸¦ ÆÇÁ¤ÇÏ°Ú´Ù..
+	//ï¿½Æ¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å°ï¿½ï¿½ ï¿½ÈµÇ¹Ç·ï¿½...sessionï¿½ï¿½ ï¿½Ì¿ï¿½
+	//sessionï¿½ï¿½ readTable ï¿½Ì¶ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ Setï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ö°ï¿½
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°Ú´ï¿½..
 	
-	//session¿¡¼­ readTable ²¨³»º»´Ù.
+	//sessionï¿½ï¿½ï¿½ï¿½ readTable ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
 	HashSet<Integer> readTable = 
 		(HashSet<Integer>)session.getAttribute("readTable");
 	
-	//¾øÀ¸¸é »õ·Î ¸¸µç´Ù.
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½.
 	if(readTable==null){
 		readTable = new HashSet<Integer>();
 	}
 	
-	//readTable¿¡ Áö±İ ÀĞ´Â ±Û ¹øÈ£°¡ ÀÖ´ÂÁö È®ÀÎ
+	//readTableï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ğ´ï¿½ ï¿½ï¿½ ï¿½ï¿½È£ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ È®ï¿½ï¿½
 	if(readTable.add(no)){//readTable.add(no) == true
-		//Ã³À½ ÀĞ´Â ±ÛÀÎ °æ¿ì, Á¶È¸¼ö 1 Áõ°¡
+		//Ã³ï¿½ï¿½ ï¿½Ğ´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½, ï¿½ï¿½È¸ï¿½ï¿½ 1 ï¿½ï¿½ï¿½ï¿½
 		bdao.plusCount(no);
-		session.setAttribute("readTable", readTable);//°»½Å
+		session.setAttribute("readTable", readTable);//ï¿½ï¿½ï¿½ï¿½
 	}
 	
-	//no·Î °Ô½Ã±ÛÀÇ ¸ğµç Á¤º¸¸¦ ºÒ·¯¿Í¾ß ÇÑ´Ù.
+	//noï¿½ï¿½ ï¿½Ô½Ã±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½Í¾ï¿½ ï¿½Ñ´ï¿½.
 	BoardDTO bdto = bdao.getBoard(no); 
-	//nullÀÎ °æ¿ì ÅğÃâ
+	//nullï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	if(bdto==null){
 		response.sendRedirect("list.jsp");
 		return;
@@ -45,71 +46,88 @@
 <%@ include file="/top.jsp"%>
 <script type="text/javascript">
 	function sendReply(){
-		//alert("¾ÆÁ÷ ±¸Çö ÁØºñÁßÀÌ¿¡¿ä");
-		//replyFormÀÌ¶ó´Â ÀÌ¸§ÀÇ ÆûÀ» Àü¼Û
+		//alert("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Øºï¿½ï¿½ï¿½ï¿½Ì¿ï¿½ï¿½ï¿½");
+		//replyFormï¿½Ì¶ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		document.replyForm.submit();
 	}
 	function sendRec(){
-		alert("ÃßÃµ ±â´ÉÀÔ´Ï´Ù.");
+		alert("ï¿½ï¿½Ãµ ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½.");
 	}
 	function sendEdit(no){
-		//alert("¼öÁ¤ ±â´ÉÀÔ´Ï´Ù.");
+		//alert("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½.");
 		location.href="pw.jsp?no="+no+"&next=edit.jsp";
 	}
 	function sendDel(no){
-		//alert("»èÁ¦ ±â´ÉÀÔ´Ï´Ù.");
+		//alert("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½.");
 		location.href="pw.jsp?no="+no+"&next=delete.jsp";
 	}
 </script>
 <div align="center">
-<form name="replyForm" method="post" action="reply.jsp">
-<input type="hidden" name="no" value="<%=no%>">
-<input type="hidden" name="title" value="<%=bdto.getTitle()%>">
-<input type="hidden" name="ref" value="<%=bdto.getRef()%>">
-<input type="hidden" name="re_step" value="<%=bdto.getRe_step()%>">
-<input type="hidden" name="re_level" value="<%=bdto.getRe_level()%>">
-</form>
-	<h1>±Û ÀĞ ±â</h1>
+	<form name="replyForm" method="post" action="reply.jsp">
+		<input type="hidden" name="no" value="<%=no%>"> <input
+			type="hidden" name="title" value="<%=bdto.getTitle()%>"> <input
+			type="hidden" name="ref" value="<%=bdto.getRef()%>"> <input
+			type="hidden" name="re_step" value="<%=bdto.getRe_step()%>">
+		<input type="hidden" name="re_level" value="<%=bdto.getRe_level()%>">
+	</form>
+	<h1>ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½</h1>
 	<table class="outline" width="650">
-	<tr>
-		<th class="m2" width="20%">¹øÈ£</th>
-		<td class="m3" width="30%"><%=no%></td>
-		<th class="m2" width="20%">Á¶È¸¼ö</th>
-		<th class="m3"><%=bdto.getReadcount()%></th>
-	</tr>
-	<tr>
-		<th class="m2">ÀÛ¼ºÀÚ</th>
-		<td class="m3"><%=bdto.getWriter()%></td>
-		<th class="m2">ÃßÃµ¼ö</th>
-		<th class="m3"><%=bdto.getRecommand()%></th>
-	</tr>
-	<tr>
-		<th class="m2">Á¦¸ñ</th>
-		<td class="m3" colspan="3"><%=bdto.getTitle()%></td>
-	</tr>
-	<tr height="200">
-		<th class="m2">³»¿ë</th>
-		<td class="m3" colspan="3" valign="top"
-			style="word-break:break-all;"><!-- ÁÙ°³Çà ¼Ó¼º -->
-		<%=bdto.getContent()%>
-		</td>
-	</tr>
-	<tr>
-		<th class="m2" colspan="4">
-			<input type="button" value="±Û¾²±â"
-									onclick="location.href='write.jsp';">
-			<input type="button" value="´ä±Û¾²±â"
-									onclick="sendReply();">
-			<input type="button" value="ÃßÃµÇÏ±â"
-									onclick="sendRec();">
-			<input type="button" value="¼öÁ¤"
-									onclick="sendEdit(<%=no%>);">
-			<input type="button" value="»èÁ¦"
-									onclick="sendDel(<%=no%>);">
-			<input type="button" value="¸ñ·Ï"
-									onclick="location.href='list.jsp';">
-		</th>
-	</tr>
+		<tr>
+			<th class="m2" width="20%">ï¿½ï¿½È£</th>
+			<td class="m3" width="30%"><%=no%></td>
+			<th class="m2" width="20%">ï¿½ï¿½È¸ï¿½ï¿½</th>
+			<th class="m3"><%=bdto.getReadcount()%></th>
+		</tr>
+		<tr>
+			<th class="m2">ï¿½Û¼ï¿½ï¿½ï¿½</th>
+			<td class="m3"><%=bdto.getWriter()%></td>
+			<th class="m2">ï¿½ï¿½Ãµï¿½ï¿½</th>
+			<th class="m3"><%=bdto.getRecommand()%></th>
+		</tr>
+		<tr>
+			<th class="m2">ï¿½ï¿½ï¿½ï¿½</th>
+			<td class="m3" colspan="3"><%=bdto.getTitle()%></td>
+		</tr>
+		<tr height="200">
+			<th class="m2">ï¿½ï¿½ï¿½ï¿½</th>
+			<td class="m3" colspan="3" valign="top"
+				style="word-break: break-all;">
+				<!-- ï¿½Ù°ï¿½ï¿½ï¿½ ï¿½Ó¼ï¿½ --> <%=bdto.getContent()%>
+			</td>
+		</tr>
+		<!-- ì¤„ìì²´ì— ì¡°ê±´ì„ ê±¸ë˜ê°€ ë‚´ìš©ë§Œ ì¡°ê±´ì„ ê±¸ë˜ê°€ -->
+		<!-- ì²¨ë¶€íŒŒì¼ì´ ìˆëŠ” ê²½ìš°ì—ë§Œ ì²¨ë¶€íŒŒì¼ ì¤„ í‘œì‹œë¥¼ í•œë‹¤. -->
+		<%
+			if (bdto.getFilesize() > 0) {
+		%>
+		<tr>
+			<th class="m2">ì²¨ë¶€ íŒŒì¼</th>
+			<td class="m3" colspan="3">
+				<%
+					String path = request.getContextPath() + "/board/file";
+				String fullPath = path+"/"+bdto.getFilename();
+				double filesize = bdto.getFilesize()/Math.pow(1024,2);
+				DecimalFormat df = new DecimalFormat("#.##");
+				%> <a href="<%=fullPath%>">ë‹¤ìš´ë¡œë“œ</a>, 
+				<h4>ì´ë¦„ : <%=bdto.getFilename()%></h4>
+				<h4>í¬ê¸° : <%=df.format(filesize)%>MB</h4>
+				<!--  byteë¡œ ì¶œë ¥ëœë‹¤. -->
+			</td>
+
+		</tr>
+		<%
+			}
+		%>
+		<tr>
+			<th class="m2" colspan="4"><input type="button" value="ï¿½Û¾ï¿½ï¿½ï¿½"
+				onclick="location.href='write.jsp';"> <input type="button"
+				value="ï¿½ï¿½Û¾ï¿½ï¿½ï¿½" onclick="sendReply();"> <input type="button"
+				value="ï¿½ï¿½Ãµï¿½Ï±ï¿½" onclick="sendRec();"> <input type="button"
+				value="ï¿½ï¿½ï¿½ï¿½" onclick="sendEdit(<%=no%>);"> <input
+				type="button" value="ï¿½ï¿½ï¿½ï¿½" onclick="sendDel(<%=no%>);"> <input
+				type="button" value="ï¿½ï¿½ï¿½" onclick="location.href='list.jsp';">
+			</th>
+		</tr>
 	</table>
 </div>
 <%@ include file="/bottom.jsp"%>
